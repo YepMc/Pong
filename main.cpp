@@ -2,6 +2,8 @@
 #include <iostream>
 
 //Types and struct definitions
+int CpuScore = 0;
+int PlayerScore = 0;
 class Paddle {
 public:
     int speed;
@@ -45,12 +47,26 @@ public:
     void DrawBall() {
         DrawCircle(x, y, radius, RAYWHITE);
     }
+    void ResetBall() {
+        x= GetScreenWidth() / 2;
+        y = GetScreenHeight() / 2;
+        int speed_Choices[2] = {-1, 1};
+        speed_x *= speed_Choices[GetRandomValue(0, 1)];
+        speed_y *= speed_Choices[GetRandomValue(0, 1)];
+    }
     void UpdateBall() {
         if ( (y + radius) >= GetScreenHeight() || (y-radius) <= 0) {
             speed_y *= -1;
         }
-        if ( (x + radius) >= GetScreenWidth() || (x-radius) <= 0  ) {
-            speed_x *= -1;
+        if ( (x + radius) >= GetScreenWidth()) {
+            ResetBall();
+            PlayerScore ++ ;
+
+        }
+        if ((x-radius) <= 0  ) {
+            ResetBall();
+            CpuScore ++ ;
+
         }
 
         // bool CheckCollisionCircleRec(Vector2 center, float radius, Rectangle rec);
@@ -63,8 +79,10 @@ public:
             speed_x *= -1;
         }
 
-        x += speed_x;
-        y += speed_y;
+
+    x  += speed_x; y  += speed_y;
+
+
     }
 } ;
     Ball ball;
@@ -105,8 +123,8 @@ public:
             leftPaddle.DrawPaddle();
             CpuPad.DrawPaddle();
             DrawLine(screenWidth/2, 0, screenWidth/2, screenHeight, RAYWHITE);
-
-
+            DrawText(TextFormat("%i",PlayerScore), screenWidth/4-20, 20, 80 , WHITE);
+            DrawText(TextFormat("%i",CpuScore), 3*screenWidth/4-20, 20, 80 , WHITE);
             EndDrawing(); // No more drawing after this
         }
 
