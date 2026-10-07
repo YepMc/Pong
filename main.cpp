@@ -49,7 +49,7 @@ public:
     }
     void ResetBall() {
         x= GetScreenWidth() / 2;
-        y = GetScreenHeight() / 2;
+        y= GetRandomValue(0, GetScreenHeight());
         int speed_Choices[2] = {-1, 1};
         speed_x *= speed_Choices[GetRandomValue(0, 1)];
         speed_y *= speed_Choices[GetRandomValue(0, 1)];
@@ -73,10 +73,19 @@ public:
         if (CheckCollisionCircleRec((Vector2){x, y}, radius, (Rectangle){(float)leftPaddle.x, (float)leftPaddle.y, (float)leftPaddle.width, (float)leftPaddle.height})) {
             x = leftPaddle.x + leftPaddle.width + radius;
             speed_x *= -1;
+
+            float paddleCenterY = leftPaddle.y + (leftPaddle.height/2.0f);
+            float hitOffset = (y - paddleCenterY) / (leftPaddle.height /2.0f);
+
+            speed_y = hitOffset * 11.0f;
         }
         if (CheckCollisionCircleRec((Vector2){x, y}, radius, (Rectangle){(float)CpuPad.x, (float)CpuPad.y, (float)CpuPad.width, (float)CpuPad.height})) {
             x = CpuPad.x - radius;
             speed_x *= -1;
+
+            float paddleCenterY = CpuPad.y + (CpuPad.height/2.0f);
+            float hitOffset = (y-paddleCenterY) / (CpuPad.height /2.0f);
+            speed_y = hitOffset * 11.0f;
         }
 
 
@@ -91,8 +100,8 @@ public:
         const int screenHeight = 800;
         ball.x = screenWidth / 2;
         ball.y = screenHeight / 2;
-        ball.speed_x = 7;
-        ball.speed_y = 7;
+        ball.speed_x = 11;
+        ball.speed_y = 11;
         ball.radius = 30;
 
         leftPaddle.x = 15;
